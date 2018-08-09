@@ -43,23 +43,13 @@ Shader "Msm/Offset_Frag"
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				//o.vertex += float4(_SpeedX, _SpeedY, 0, _SpeedZ)*_Time.y;
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);			
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				/*
-				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
-				return col;
-				*/
-				fixed2 UV = i.uv;
-				fixed xV = _SpeedX * _Time.x;
-				fixed yV = _SpeedY * _Time.y;
-				UV += fixed2(xV, yV);
-				fixed4 col = tex2D(_MainTex, UV);
+				fixed4 col = tex2D(_MainTex, i.uv+_Time.y*fixed2(_SpeedX,_SpeedY));
 				return col;
 			}
 			ENDCG
