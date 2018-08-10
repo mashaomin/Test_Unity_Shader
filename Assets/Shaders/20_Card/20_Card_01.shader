@@ -110,7 +110,7 @@ Shader "Msm/20_Card/01"
 				*/
 				// Grab the motion texture, if the speed value is non-zero, we'll use the red and green channels as the UVs for the effect texture.
 				// Else, we use the EffectUVs as is, but still keep the blue and alpha channels of the motion texture for later use (blending).
-				fixed4 col =float4(0,0,0,0);
+				fixed4 col =fixed4(0,0,0,0);
 				fixed bg = col.a;
 				fixed4 motion1 = tex2D(_EffectsLayer1Motion, i.uv);
 
@@ -120,13 +120,18 @@ Shader "Msm/20_Card/01"
 				else
 					motion1 = fixed4(i.effect1uv.rg, motion1.b, motion1.a);
 				
-				fixed4 effect1 = tex2D(_EffectsLayer1Tex, motion1.xy) * motion1.a;
-				effect1 *= _EffectsLayer1Color;
+				fixed4 effect1 = tex2D(_EffectsLayer1Tex, motion1.xy);
+				//fixed4 effect1 = tex2D(_EffectsLayer1Tex, motion1.xy) * motion1.a;
+				//effect1 *= _EffectsLayer1Color;
 
 				// To the base color, we add the effect color, multiplied by it's own alpha, and then byu the back ground mask alpha (if this effect is not in the foreground).
 				// TODO: Add support for alpha blending instead of additive, some cards seem to use that.
 
 				col += effect1 * effect1.a * max(bg, _EffectsLayer1Foreground);
+
+				//col=tex2D(_EffectsLayer1Tex,motion1.xy);
+
+
 				return col;
 			}
 			ENDCG
